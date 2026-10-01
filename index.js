@@ -11,7 +11,8 @@ app.all('/voice', async (req, res) => {
   const userSpeech = req.query.speech || req.body.speech || req.query.val_name;
 
   if (!userSpeech) {
-    return res.send("read=t-שלום, במה אוכל לעזור? תגיד את השאלה בסיום השטיקה.=speech,no,1,7,60,s,s,ALL");
+    // זיהוי דיבור: מסיים בלחיצה על # או אחרי 2 שניות של שקט (20 עשיריות שניה)
+    return res.send("read=t-שלום, במה אוכל לעזור? דבר ובסיום הקש סולמית או המתן שתי שניות.=speech,no,1,7,20,s,s,ALL,no,no,no,no,yes,no,no");
   }
 
   try {
@@ -19,10 +20,11 @@ app.all('/voice', async (req, res) => {
     const result = await model.generateContent(`ענה בקצרה ובשפה ברורה שמתאימה להקראה קולית בטלפון: ${userSpeech}`);
     const replyText = result.response.text().replace(/[*#_]/g, '');
 
-    return res.send(`read=t-${replyText}. מה השאלה הבאה?=speech,no,1,7,60,s,s,ALL`);
+    // מענה והנחיה לשאלה הבאה - סיום ב-# או ב-2 שניות שקט
+    return res.send(`read=t-${replyText}. מה השאלה הבאה?=speech,no,1,7,20,s,s,ALL,no,no,no,no,yes,no,no`);
   } catch (error) {
     console.error(error);
-    return res.send("read=t-התרחשה שגיאה בעיבוד הבקשה, אנא נסה שוב.=speech,no,1,7,60,s,s,ALL");
+    return res.send("read=t-התרחשה שגיאה בעיבוד הבקשה, אנא נסה שוב.=speech,no,1,7,20,s,s,ALL,no,no,no,no,yes,no,no");
   }
 });
 
