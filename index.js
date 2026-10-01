@@ -1,5 +1,5 @@
 const express = require('express');
-const { GoogleGenerativeAI } = require('@google/genai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -15,7 +15,7 @@ app.all('/voice', async (req, res) => {
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(`ענה בקצרה ובשפה ברורה שמתאימה להקראה קולית בטלפון: ${userSpeech}`);
     const replyText = result.response.text().replace(/[*#_]/g, '');
 
